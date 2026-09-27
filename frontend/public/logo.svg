@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Bia Energy logo">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0b163b"/>
+      <stop offset="100%" stop-color="#0a1e39"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#7f7bff"/>
+      <stop offset="100%" stop-color="#21d4fd"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <path d="M280 102c60 0 104 42 104 99 0 41-20 66-52 79 37 12 62 42 62 86 0 63-49 101-122 101H170V102h110Zm-60 74v83h42c34 0 52-16 52-42 0-26-18-41-52-41h-42Zm0 157v94h50c38 0 58-17 58-48 0-29-19-46-58-46h-50Z" fill="url(#accent)"/>
+  <path d="M97 330h82v53H97z" fill="#dfe7ff" opacity="0.92"/>
+  <path d="M130 228h60v103h-60z" fill="#dfe7ff" opacity="0.72"/>
+</svg>

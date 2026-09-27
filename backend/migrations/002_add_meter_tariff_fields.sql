@@ -1,0 +1,8 @@
+ALTER TABLE meters
+  ADD COLUMN IF NOT EXISTS provider TEXT;
+
+ALTER TABLE meters
+  ADD COLUMN IF NOT EXISTS region TEXT;
+
+ALTER TABLE meters
+  ADD COLUMN IF NOT EXISTS rate_type TEXT DEFAULT 'industrial';

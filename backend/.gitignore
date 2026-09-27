@@ -1,0 +1,24 @@
+# Binaries
+*.exe
+*.out
+*.test
+/bin/
+/dist/
+learning
+api
+seed
+
+# Coverage
+*.coverprofile
+coverage.out
+coverage.html
+
+# Env
+.env
+!.env.example
+
+# IDE and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

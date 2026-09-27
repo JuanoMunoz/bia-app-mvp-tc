@@ -1,0 +1,19 @@
+{
+    "name": "Bia Energy",
+    "short_name": "Bia",
+    "description": "Plataforma de energía y gestión de consumo para empresas.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#030d22",
+    "theme_color": "#001035",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/logo.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}
