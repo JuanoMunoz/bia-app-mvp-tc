@@ -49,11 +49,7 @@ Antes de arrancar el proyecto necesitas:
 ├── backend/                # API Go, lógica de análisis y persistencia
 ├── frontend/               # app React + Vite
 ├── data/                   # CSV de ejemplo
-├── docs/                   # documentación técnica y onboarding
-├── README.md               # este archivo
-├── AGENTS.MD               # instrucciones del proyecto
-├── GEMINI.MD               # referencia de configuración Gemini
-└── TASKS.md                # backlog / tareas
+├── docs/
 ```
 
 ## Arranque rápido
