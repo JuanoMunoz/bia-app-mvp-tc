@@ -118,7 +118,7 @@ func TestHealthEndpoints(t *testing.T) {
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 	meters := testMeterService{}
 	analyses := testAnalysisService{result: ai.Analysis{Anomalies: []anomaly.Anomaly{}}}
-	router, err := NewRouterWithDashboardAndHealth(meters, testAnomalyService{}, analyses, nil, testHealthChecker{}, nil, logger)
+	router, err := NewRouterWithDashboardAndHealth(meters, testAnomalyService{}, analyses, nil, testHealthChecker{}, nil, logger, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -146,7 +146,7 @@ func TestHealthEndpoints(t *testing.T) {
 func TestHealthReturnsServiceUnavailableWhenDependencyFails(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
-	router, err := NewRouterWithDashboardAndHealth(testMeterService{}, testAnomalyService{}, testAnalysisService{}, nil, testHealthChecker{err: errors.New("database unavailable")}, nil, logger)
+	router, err := NewRouterWithDashboardAndHealth(testMeterService{}, testAnomalyService{}, testAnalysisService{}, nil, testHealthChecker{err: errors.New("database unavailable")}, nil, logger, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -192,7 +192,7 @@ func TestAnalyzeReturnsStructuredResult(t *testing.T) {
 func TestPatchMeterConfigPersistsProfile(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	profiles := &testMeterProfileStore{}
-	profileRouter, err := NewRouterWithDashboardAndHealth(testMeterService{}, testAnomalyService{}, testAnalysisService{}, nil, testHealthChecker{}, profiles, slog.New(slog.NewTextHandler(io.Discard, nil)))
+	profileRouter, err := NewRouterWithDashboardAndHealth(testMeterService{}, testAnomalyService{}, testAnalysisService{}, nil, testHealthChecker{}, profiles, slog.New(slog.NewTextHandler(io.Discard, nil)), nil)
 	if err != nil {
 		t.Fatal(err)
 	}

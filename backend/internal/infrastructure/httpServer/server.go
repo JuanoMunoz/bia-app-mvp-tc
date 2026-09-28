@@ -78,19 +78,19 @@ type Server struct {
 }
 
 func NewRouter(meters MeterService, anomalies AnomalyService, analysis AnalysisService, logger *slog.Logger) (*gin.Engine, error) {
-	return NewRouterWithDashboardAndHealth(meters, anomalies, analysis, dashboardapp.NewService(meters, anomalies, analysis), nil, nil, logger)
+	return NewRouterWithDashboardAndHealth(meters, anomalies, analysis, dashboardapp.NewService(meters, anomalies, analysis), nil, nil, logger, nil)
 }
 
 func NewRouterWithDashboard(meters MeterService, anomalies AnomalyService, analysis AnalysisService, dashboard DashboardService, logger *slog.Logger) (*gin.Engine, error) {
-	return NewRouterWithDashboardAndHealth(meters, anomalies, analysis, dashboard, nil, nil, logger)
+	return NewRouterWithDashboardAndHealth(meters, anomalies, analysis, dashboard, nil, nil, logger, nil)
 }
 
-func NewRouterWithDashboardAndHealth(meters MeterService, anomalies AnomalyService, analysis AnalysisService, dashboard DashboardService, health HealthChecker, profiles MeterProfileStore, logger *slog.Logger, billingServices ...BillingService) (*gin.Engine, error) {
+func NewRouterWithDashboardAndHealth(meters MeterService, anomalies AnomalyService, analysis AnalysisService, dashboard DashboardService, health HealthChecker, profiles MeterProfileStore, logger *slog.Logger, allowedOrigins []string, billingServices ...BillingService) (*gin.Engine, error) {
 	router := gin.New()
 	if err := router.SetTrustedProxies(nil); err != nil {
 		return nil, err
 	}
-	router.Use(middleware.JSONMiddleware(), middleware.LocalCORSMiddleware(), middleware.RateLimitMiddleware(60, time.Minute), middleware.LoggingMiddleware(logger), gin.Recovery())
+	router.Use(middleware.JSONMiddleware(), middleware.CORSMiddleware(allowedOrigins), middleware.RateLimitMiddleware(60, time.Minute), middleware.LoggingMiddleware(logger), gin.Recovery())
 	var billing BillingService
 	if len(billingServices) > 0 {
 		billing = billingServices[0]
