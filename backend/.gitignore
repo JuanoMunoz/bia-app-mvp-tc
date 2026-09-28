@@ -1,12 +1,12 @@
-# Binaries
+# Binaries (anclados a la raíz de backend con "/" para NO ignorar backend/cmd/api ni backend/cmd/seed)
 *.exe
 *.out
 *.test
 /bin/
 /dist/
-learning
-api
-seed
+/learning
+/api
+/seed
 
 # Coverage
 *.coverprofile
