@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Única ruta pública indexable. /app/* está tras login + noindex + Disallow (ver robots.txt y App.tsx) -->
+  <url>
+    <loc>https://bia-app-mvp-tc.vercel.app/</loc>
+    <lastmod>2026-09-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

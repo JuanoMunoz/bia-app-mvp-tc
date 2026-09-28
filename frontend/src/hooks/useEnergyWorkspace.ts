@@ -58,9 +58,28 @@ export function useEnergyWorkspace() {
         setError(null)
         try {
             const result = await runAnalysis()
-            setAnalysis(result)
             await refreshData()
-            setAnalysis((latest) => latest ?? result)
+            // El resultado recién ejecutado es la revisión más nueva: se impone sobre
+            // cualquier resumen desactualizado que haya traído refreshData().
+            setSummary((previous) => {
+                if (!previous) return previous
+                const previousStamp = previous.latest_analysis?.completed_at || previous.latest_analysis?.started_at
+                const nextStamp = result.completed_at || result.started_at
+                if (!previousStamp) return { ...previous, latest_analysis: result }
+                if (nextStamp && new Date(nextStamp).getTime() >= new Date(previousStamp).getTime()) {
+                    return { ...previous, latest_analysis: result }
+                }
+                return previous
+            })
+            setAnalysis((current) => {
+                if (!current) return result
+                const currentStamp = current.completed_at || current.started_at
+                const nextStamp = result.completed_at || result.started_at
+                if (nextStamp && (!currentStamp || new Date(nextStamp).getTime() >= new Date(currentStamp).getTime())) {
+                    return result
+                }
+                return current
+            })
             setSelectedAnomaly(null)
         } catch (cause) {
             setError(cause instanceof Error ? cause.message : 'No se pudo completar el análisis.')

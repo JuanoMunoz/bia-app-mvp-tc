@@ -6,13 +6,26 @@ export function compactNumber(value: number) {
     return new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 }).format(value)
 }
 
-export function timeAgo(value: string) {
-    const minutes = Math.max(0, Math.floor((Date.now() - new Date(value).getTime()) / 60_000))
+export function timeAgo(value: string | null | undefined) {
+    if (!value) return '—'
+    const time = new Date(value).getTime()
+    // Fecha inválida, vacía o tiempo cero de Go (0001-01-01) / epoch: no hay revisión real.
+    if (Number.isNaN(time) || time <= 0) return '—'
+    const minutes = Math.max(0, Math.floor((Date.now() - time) / 60_000))
     if (minutes < 1) return 'ahora'
     if (minutes < 60) return `hace ${minutes} min`
     const hours = Math.floor(minutes / 60)
     if (hours < 24) return `hace ${hours} h`
     return `hace ${Math.floor(hours / 24)} d`
+}
+
+/** Devuelve el timestamp válido de una revisión (prefiere completed_at) o null si no hay revisión real. */
+export function revisionTimestamp(revision: { completed_at?: string | null; started_at?: string | null } | null | undefined) {
+    const raw = revision?.completed_at || revision?.started_at
+    if (!raw) return null
+    const time = new Date(raw).getTime()
+    if (Number.isNaN(time) || time <= 0) return null
+    return raw
 }
 
 export function anomalyTypeLabel(type: string) {

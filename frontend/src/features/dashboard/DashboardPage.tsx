@@ -15,7 +15,7 @@ import { buildHourWeekHeatmap } from '../../charts-data'
 import type { Analysis, Anomaly, DashboardSummary, MeterSummary, SitePoint } from '../../types'
 import { ChartLoading, InfoTooltip, KpiCard, PanelTitle } from '../../components/ui'
 import { InsightCard } from '../../components/InsightCard'
-import { anomalyTypeLabel, compactNumber, formatDate, formatDateRange, timeAgo } from '../../utils/format'
+import { anomalyTypeLabel, compactNumber, formatDate, formatDateRange, revisionTimestamp, timeAgo } from '../../utils/format'
 
 const ConsumptionChart = lazy(() => import('../../charts').then((module) => ({ default: module.ConsumptionChart })))
 
@@ -49,6 +49,18 @@ export function DashboardPage({
     const heatmapData = buildHourWeekHeatmap(siteHistory)
     const loadCurveData = siteHistory.map((item) => item.consumption_kwh)
     const confidence = summary ? Math.round(summary.aggregate_confidence * 100) : 0
+    // La revisión más reciente entre el análisis recién ejecutado y el del resumen.
+    // Evita fechas inválidas/cero (mostraban "hace NNN días") y prioriza el resultado
+    // fresco aunque el resumen recargado venga desactualizado.
+    let lastRevisionDate: string | null = null
+    let lastRevisionStatus: string | null = null
+    for (const item of [analysis, summary?.latest_analysis ?? null]) {
+        const stamp = revisionTimestamp(item)
+        if (stamp && (!lastRevisionDate || new Date(stamp).getTime() > new Date(lastRevisionDate).getTime())) {
+            lastRevisionDate = stamp
+            lastRevisionStatus = item?.status ?? null
+        }
+    }
 
     return (
         <>
@@ -71,7 +83,7 @@ export function DashboardPage({
                 <KpiCard label="Alertas detectadas" value={summary?.anomaly_count ?? '—'} note="Última revisión" icon={<Activity size={17} />} tone="violet" />
                 <KpiCard label="Alta prioridad" value={summary?.high_priority_count ?? '—'} note="Requieren atención" icon={<AlertTriangle size={17} />} tone="coral" />
                 <KpiCard label="Confianza del análisis" value={summary ? `${confidence}%` : '—'} note="Promedio de hallazgos" icon={<Sparkles size={17} />} tone="green" />
-                <KpiCard label="Última revisión" value={summary?.latest_analysis ? timeAgo(summary.latest_analysis.completed_at ?? summary.latest_analysis.started_at) : '—'} note={summary?.latest_analysis?.status === 'COMPLETED' ? 'Completada' : 'Sin revisión'} icon={<CheckCircle2 size={17} />} tone="neutral" />
+                <KpiCard label="Última revisión" value={lastRevisionDate ? timeAgo(lastRevisionDate) : '—'} note={lastRevisionStatus === 'COMPLETED' ? 'Completada' : lastRevisionStatus === 'RUNNING' ? 'En curso' : lastRevisionStatus === 'FAILED' ? 'Fallida' : 'Sin revisión'} icon={<CheckCircle2 size={17} />} tone="neutral" />
             </section>
 
             <section className="context-help-list" aria-label="Glosario de ayuda contextual">
